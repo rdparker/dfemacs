@@ -1,3 +1,4 @@
-docker kill dfvim
-docker rm dfvim
-docker build -t dfvim .
+#! /bin/sh
+docker kill therdp/dfemacs
+docker rm therdp/dfemacs
+docker build -t therdp/dfemacs .
