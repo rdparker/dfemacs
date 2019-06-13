@@ -99,4 +99,5 @@ RUN apt-get update -y && \
     TERM=xterm su dfemacs -c 'script --force -qefc "emacs --eval \(save-buffers-kill-emacs\)" /dev/null | cat -'
 
 USER dfemacs
+WORKDIR /home/dfemacs
 CMD ["/bin/bash"]
