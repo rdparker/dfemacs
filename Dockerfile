@@ -96,10 +96,7 @@ RUN apt-get update -y && \
     mkdir /src && \
     git clone https://github.com/syl20bnr/spacemacs ~dfemacs/.emacs.d && \
     chown dfemacs /home/dfemacs /src/ -R && \
-    cd ~dfemacs && \
-    ln -s /src . && \
-    TERM=xterm su dfemacs -c 'script -qefc "emacs --eval \(save-buffers-kill-emacs\)" | cat -'
+    TERM=xterm su dfemacs -c 'script --force -qefc "emacs --eval \(save-buffers-kill-emacs\)" /dev/null | cat -'
 
 USER dfemacs
-WORKDIR /home/dfemacs
 CMD ["/bin/bash"]
