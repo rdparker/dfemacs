@@ -87,6 +87,7 @@ COPY --from=build-emacs /fakeroot /usr/local/
 RUN apt-get update -y && \
     apt-get --no-install-recommends install -yq apt-utils && \
     apt-get --no-install-recommends install -yq man less ctags wget curl git subversion ssh-client make unzip sudo rsync tmux && \
+    apt-get			    install ispell iamerican ibritish && \
     apt-get --no-install-recommends install -yq $(apt-cache depends emacs25 emacs25-bin emacs25-bin-common emacs25-common emacsen-common | awk '/Depends:/{print $2}' | grep -v emacs) && \
     apt-get clean
 
