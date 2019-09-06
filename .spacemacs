@@ -317,7 +317,8 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (global-hl-line-mode -1)
-;;; dired-x & dired-sort-menu -- extend dired
+
+  ;;; dired-x & dired-sort-menu -- extend dired
   (use-package dired-x
     :defer t
     :commands dired-omit-mode
@@ -355,6 +356,22 @@ you should place your code here."
     (add-hook 'dired-mode-hook
               (lambda ()
                 (dired-omit-mode 1))))
+
+  ;;; package dotnet
+  (use-package dotnet
+    :bind-keymap
+    ("C-c C-n" . dotnet-mode-command-map)
+    :hook ((csharp-mode . dotnet-mode)
+           (fsharp-mode . dotnet-mode)))
+
+  ;;; package projectile
+  (use-package projectile
+    :config
+    (defun projectile-dotnet-project-p ()
+      (or (projectile-verify-file-wildcard "?*.sln")
+          (projectile-verify-file-wildcard "?*.csproj")
+          (projectile-verify-file-wildcard "?*.fsproj"))))
+
   ;; Spacemacs 0.200.13.x adds a variable to `yas-snippet-dirs' that is
   ;; outdated. It is inside the yasnippets package, wwhich no longer ships with
   ;; snippets. The yasnippets-snippets package is used instead, and it adds
