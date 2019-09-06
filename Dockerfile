@@ -80,23 +80,29 @@ from fsharp-netcore
 ENV MONO_THREADS_PER_CPU 50
 ENV LANG=en_US.utf-8
 
-copy --from=build-emacs /opt /opt/
-copy --from=build-emacs /fakeroot /usr/local/
-
-# set up dfemacs user with uid 1000 to (hopefully) match host uid
-RUN useradd --shell /bin/bash -u 1000 -o -c "" -m dfemacs
-copy .spacemacs /home/dfemacs/
+COPY --from=build-emacs /opt /opt/
+COPY --from=build-emacs /fakeroot /usr/local/
 
 # install some additional dev tools desired or required
 RUN apt-get update -y && \
     apt-get --no-install-recommends install -yq apt-utils && \
-    apt-get --no-install-recommends install -yq man less ctags wget curl git subversion ssh-client make unzip && \
+    apt-get --no-install-recommends install -yq man less ctags wget curl git subversion ssh-client make unzip sudo rsync tmux && \
     apt-get --no-install-recommends install -yq $(apt-cache depends emacs25 emacs25-bin emacs25-bin-common emacs25-common emacsen-common | awk '/Depends:/{print $2}' | grep -v emacs) && \
-    apt-get clean && \
-    mkdir /src && \
+    apt-get clean
+
+# set up dfemacs user with uid 1000 to (hopefully) match host uid
+RUN useradd --shell /bin/bash -u 1000 -o -c "" -m -G sudo dfemacs && \
+    echo 'alias tmux=TERM=xterm-256color\ tmux' >> /home/dfemacs/.bashrc && \
+    echo 'set -g default-terminal "screen-256color"' >> /home/dfemacs/.tmux.conf
+
+# configure Emacs with Spacemacs
+COPY .spacemacs /home/dfemacs/
+RUN mkdir /src && \
+    ln -s /src /home/dfemacs/src && \
     git clone https://github.com/syl20bnr/spacemacs ~dfemacs/.emacs.d && \
-    chown dfemacs /home/dfemacs /src/ -R && \
-    TERM=xterm su dfemacs -c 'script --force -qefc "emacs --eval \(save-buffers-kill-emacs\)" /dev/null | cat -'
+    chown -R dfemacs /home/dfemacs /src && \
+    TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
+    rm /home/dfemacs/typescript
 
 USER dfemacs
 WORKDIR /home/dfemacs
