@@ -96,13 +96,13 @@ RUN useradd --shell /bin/bash -u 1000 -o -c "" -m -G sudo dfemacs && \
     echo 'alias tmux=TERM=xterm-256color\ tmux' >> /home/dfemacs/.bashrc && \
     echo 'set -g default-terminal "screen-256color"' >> /home/dfemacs/.tmux.conf
 
-# configure Emacs with Spacemacs
+# configure Emacs with Spacemacs and OmniSharp
 COPY .spacemacs /home/dfemacs/
 RUN mkdir /src && \
     ln -s /src /home/dfemacs/src && \
     git clone https://github.com/syl20bnr/spacemacs ~dfemacs/.emacs.d && \
     chown -R dfemacs /home/dfemacs /src && \
-    TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
+    TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(omnisharp-install-server\) --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
     rm /home/dfemacs/typescript
 
 USER dfemacs
