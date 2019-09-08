@@ -59,7 +59,6 @@ values."
    dotspacemacs-additional-packages
    '(
      dotnet
-     omnisharp
      yasnippet-snippets
      )
    ;; A list of packages that cannot be updated.
@@ -359,10 +358,16 @@ you should place your code here."
 
   ;;; package dotnet
   (use-package dotnet
+    :diminish "#"
     :bind-keymap
     ("C-c C-n" . dotnet-mode-command-map)
     :hook ((csharp-mode . dotnet-mode)
            (fsharp-mode . dotnet-mode)))
+
+  ;;; package omnisharp -- used by `csharp-mode'
+  (use-package omnisharp
+    :defer t
+    :diminish "♯")
 
   ;;; package projectile
   (use-package projectile
