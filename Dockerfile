@@ -2,6 +2,7 @@
 FROM fsharp as buildenv
 RUN sed -i '{p;s/^deb /deb-src /}' /etc/apt/sources.list && \
     apt-get update && \
+    apt-get upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get build-dep -y emacs25 && \
     apt-get install -y wget curl devscripts
 
@@ -41,6 +42,7 @@ ENV FrameworkPathOverride /usr/lib/mono/4.7.2-api/
 ENV NUGET_XMLDOC_MODE skip
 ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get --no-install-recommends install -y \
     curl \
     libunwind8 \
