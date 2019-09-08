@@ -102,8 +102,15 @@ RUN mkdir /src && \
     ln -s /src /home/dfemacs/src && \
     git clone https://github.com/syl20bnr/spacemacs ~dfemacs/.emacs.d && \
     chown -R dfemacs /home/dfemacs /src && \
-    TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(omnisharp-install-server\) --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
-    rm /home/dfemacs/typescript
+    TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
+	rm /home/dfemacs/typescript
+
+# Install the latest supported OmniSharp server
+RUN VERSION=$(curl https://raw.githubusercontent.com/OmniSharp/omnisharp-emacs/master/omnisharp-settings.el | \
+	      grep omnisharp-expected-server-version | sed 's/.*"\(.*\)".*/\1/') && \
+    mkdir -p /home/dfemacs/.emacs.d/.cache/omnisharp/server/v$VERSION && \
+    wget -nv -O - https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v$VERSION/omnisharp-linux-x64.tar.gz | \
+	tar xzf - -C /home/dfemacs/.emacs.d/.cache/omnisharp/server/v$VERSION
 
 USER dfemacs
 WORKDIR /home/dfemacs
