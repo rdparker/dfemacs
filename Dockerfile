@@ -98,14 +98,22 @@ RUN useradd --shell /bin/bash -u 1000 -o -c "" -m -G sudo dfemacs && \
     echo 'alias tmux=TERM=xterm-256color\ tmux' >> /home/dfemacs/.bashrc && \
     echo 'set -g default-terminal "screen-256color"' >> /home/dfemacs/.tmux.conf
 
-# configure Emacs with Spacemacs and OmniSharp
+# configure Emacs with Spacemacs
 COPY .spacemacs /home/dfemacs/
 RUN mkdir /src && \
     ln -s /src /home/dfemacs/src && \
     git clone https://github.com/syl20bnr/spacemacs ~dfemacs/.emacs.d && \
     chown -R dfemacs /home/dfemacs /src && \
     TERM=xterm su dfemacs -c 'cd && script --force -qefc "emacs --batch -l ~/.emacs.d/init.el --eval \(save-buffers-kill-emacs\)" /home/dfemacs/typescript' && \
-	rm /home/dfemacs/typescript
+    rm /home/dfemacs/typescript && \
+	mkdir -p /home/dfemacs/.emacs.d/private/local
+
+# The projectile+ package adds autodetection of dotnet projects to
+# projectile.  The projectile+ naming style is taken from Drew Adams
+# dired+ and his other packages which enhance existing packages and
+# load after them.  I will probably try to get this integrated
+# into projectile.
+COPY projectile+.el /home/dfemacs/.emacs.d/private/local/
 
 # Install the latest supported OmniSharp server
 RUN VERSION=$(curl https://raw.githubusercontent.com/OmniSharp/omnisharp-emacs/master/omnisharp-settings.el | \
