@@ -35,7 +35,7 @@ RUN mkdir -p /opt && \
     make -j 3 && \
     fakeroot bash -c "make install-arch-dep install-arch-indep prefix=/fakeroot"
 
-# --- FSHARP .NET CORE 2.2.300 ------------------------------------------------
+# --- FSHARP .NET CORE 2.2.402 ------------------------------------------------
 FROM fsharp as fsharp-netcore
 
 ENV FrameworkPathOverride /usr/lib/mono/4.7.2-api/
@@ -60,9 +60,9 @@ RUN apt-get update && \
     libuuid1 \
     zlib1g && \
     rm -rf /var/lib/apt/lists/* && \
-    DOTNET_SDK_VERSION=2.2.300 && \
+    DOTNET_SDK_VERSION=2.2.402 && \
     DOTNET_SDK_DOWNLOAD_URL=https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz && \
-    DOTNET_SDK_DOWNLOAD_SHA=1d660a323180df3da8c6e0ea3f439d6bbec29670d498ac884f38bf3cdffbb041c7afff66171cdfd24c82394b845b135b057404def1fce9f206853726382bc42b && \
+    DOTNET_SDK_DOWNLOAD_SHA=81937de0874ee837e3b42e36d1cf9e04bd9deff6ba60d0162ae7ca9336a78f733e624136d27f559728df3f681a72a669869bf91d02db47c5331398c0cfda9b44 && \
     curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz && \
     echo "$DOTNET_SDK_DOWNLOAD_SHA dotnet.tar.gz" | sha512sum -c - && \
     mkdir -p /usr/share/dotnet && \
@@ -76,7 +76,7 @@ RUN apt-get update && \
     rm -rf warmup /tmp/NuGetScratch
 WORKDIR /root
 
-# --- FSHARP 4.5 - .NET CORE 2.2.300 - EMACS 26.2  ----------------------------
+# --- FSHARP 4.5 - .NET CORE 2.2.402 - EMACS 26.2  ----------------------------
 from fsharp-netcore
 
 ENV MONO_THREADS_PER_CPU 50
