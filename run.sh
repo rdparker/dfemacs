@@ -1,4 +1,4 @@
-# docker run --name dfvim -it -u `id -u`:`id -g` -v $(pwd):/src dfvim
+# docker run --name dfemacs -it -u `id -u`:`id -g` -v $(pwd):/src dfemacs
 
-docker run --name dfvim -it -v $(pwd):/src dfvim
-docker rm dfvim
+docker run --name dfemacs -it -v $(pwd):/src dfemacs
+docker rm dfemacs
